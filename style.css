@@ -79,13 +79,11 @@ body {
 .table {
     width: 70%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 table {
     width: 100%;
+    overflow: scroll;
     height: 100vh;
 }
 
@@ -116,9 +114,11 @@ tbody {
     justify-content: center; */
 }
 
-tbody tr td {
+/* tbody tr td {
     padding: 0 20px;
-}
+    height: 40px;
+    margin: 10px;
+} */
 
 table button {
     padding: 10px;

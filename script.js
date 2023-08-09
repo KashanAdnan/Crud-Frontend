@@ -1,17 +1,21 @@
+const table = document.querySelector("#table");
+
 const getData = () => {
-    axios.get("https://lazy-gold-katydid-yoke.cyclic.app/products")
+    axios.get("https://filthy-seal-blazer.cyclic.app/products")
         .then((res) => {
             const products = res.data.products;
+            table.innerHTML = ""
             products.map((item) => {
-                document.querySelector("#table").innerHTML += `
-            <tr id=${item._id}>
-            <td id="name">${item.name}</td>
-            <td id="price">${item.price}</htd>
-            <td id="description">${item.description}</td>
-            <td><button id="edit" onclick=updayDatad("${item._id}")><i class="fa-solid fa-pencil"></i></button></td>
-            <td><button id="delete" onclick=deleteDatad("${item._id}")><i class="fa-solid fa-trash"></i></button></td>
+                table.innerHTML += `
+                <tr id=${item._id}>
+                <td>${item.name}</td>
+                <td>${item.price}</htd>
+                <td>${item.description}</td>
+                <td><button onclick="updateInputs('${item._id}' , '${item.name}' , '${item.price}' ,'${item.description}')"><i
+                            class="fa-solid fa-pencil"></i></button></td>
+                <td><button id="delete" onclick="deleteProducts('${item._id}')"><i class="fa-solid fa-trash"></i></button></td>
             </tr>
-            `
+                `
             })
         })
         .catch((err) => {
@@ -19,60 +23,67 @@ const getData = () => {
         })
 }
 
-function updayDatad(id) {
-    const edit = document.getElementById(`${id}`);
-    const name = edit.querySelector("#name").innerText;
-    const price = edit.querySelector("#price").innerText;
-    const description = edit.querySelector("#description").innerText;
-    document.getElementById(`${id}`).innerHTML = `
-        <tr>
-            <td><input  id="${id}-name"  value="${name}" /></td>
-            <td><input  id="${id}-price" value=${price} /></htd>
-            <td><input  id="${id}-description" value="${description}"  /></td>
-            <td><button onclick=updateData("${id}")><i class="fa-solid fa-pencil"></i></button></td>
-            <td><button id="delete" onclick=deleteDatad("${id}")><i class="fa-solid fa-trash"></i></button></td>
-            </tr>
-        `
-}
-function deleteDatad(id) {
-    axios.delete(`https://lazy-gold-katydid-yoke.cyclic.app/product/${id}`)
-        .then((res) => {
-            window.location.reload()
-            // console.log(res);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-}
-function updateData(id) {
-    axios.put(`https://lazy-gold-katydid-yoke.cyclic.app/product/${id}`, {
-        name: document.getElementById(`${id}-name`).value,
-        price: document.getElementById(`${id}-price`).value,
-        description: document.getElementById(`${id}-description`).value,
-    })
-        .then((res) => {
-            window.location.reload()
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-}
 getData()
 
-const addBtn = document.getElementById("add")
+const updateInputs = (id, name, price, description) => {
+    const tableRow = document.getElementById(`${id}`);
+    tableRow.innerHTML = `
+        <tr id=${id}>
+            <td><input id="${id}-name"  value="${name}" /></td>
+            <td><input id="${id}-price" value=${price} /></htd>
+            <td><input id="${id}-description" value="${description}"  /></td>
+            <td><button onclick="updateProduct('${id}')">Set</button></td>
+            <td><button id="delete" onclick="deleteProducts('${id}')"><i class="fa-solid fa-trash"></i></button></td>
+        </tr>
+        `
+}
 
-addBtn.addEventListener("click", () => {
-    axios.post("https://lazy-gold-katydid-yoke.cyclic.app/product", {
-        name: document.querySelector("#name").value,
-        description: document.querySelector("#description").value,
-        price: document.querySelector("#price").value,
-    })
+const deleteProducts = (id) => {
+    axios.delete(`https://filthy-seal-blazer.cyclic.app/product/${id}`)
         .then((res) => {
-            alert("Product Created Succesfully")
-            window.location.reload()
+            getData()
         })
         .catch((err) => {
             console.log(err);
         })
-})
+}
 
+const updateProduct = (id) => {
+    const name = document.getElementById(`${id}-name`).value;
+    const price = document.getElementById(`${id}-price`).value
+    const description = document.getElementById(`${id}-description`).value
+    axios.put(`https://filthy-seal-blazer.cyclic.app/product/${id}`, {
+        name: name,
+        price: price,
+        description: description,
+    })
+        .then((res) => {
+            getData()
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+
+const addProuct = () => {
+    const name = document.getElementById("name").value;
+    const price = document.getElementById("price").value;
+    const description = document.getElementById("description").value;
+    axios.post("https://filthy-seal-blazer.cyclic.app/product", {
+        name: name,
+        price: price,
+        description: description,
+    })
+        .then((res) => {
+            getData()
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+
+window.getData = getData
+window.addProuct = addProuct
+window.updateInputs = updateInputs
+window.updateProduct = updateProduct
+window.deleteProducts = deleteProducts
